@@ -17,16 +17,20 @@
 
 \graphics default
 \float_placement tbh
-\paperfontsize default
-\spacing single
+\paperfontsize 12
+\spacing double
 \use_hyperref false
-\papersize default
-\use_geometry false
+\papersize letterpaper
+\use_geometry true
 \use_amsmath 0
 \use_esint 0
 \cite_engine basic
 \use_bibtopic false
 \paperorientation portrait
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -44,7 +48,7 @@
 \begin_body
 
 \begin_layout Title
-Your Title: And maybe a bit extra
+Teamwork Among Intelligent Autonomous Agents in a Robocode Environment
 \end_layout
 
 \begin_layout Author
@@ -61,31 +65,15 @@ names so you'll need to make this a 'Comment'.
 
 \end_inset
 
-Your Name, Your Co-Author
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Your name is with xyz Department\SpecialChar \ldots{}
-
-\end_layout
-
-\end_inset
-
-
+Jason Axelson, Chris Ho
 \end_layout
 
 \begin_layout Abstract
-This paper presents a simple template for IEEEtran documents.
- 
-\end_layout
-
-\begin_layout Keywords
-simplicity, beauty, elegance
+This is a report on our progress for our final project.
 \end_layout
 
 \begin_layout MarkBoth
-This is for left pages
+ICS 606 Progress Report
 \begin_inset ERT
 status open
 
@@ -96,7 +84,7 @@ status open
 
 \end_inset
 
-and this is for right pages
+ICS 606 Progress Report
 \end_layout
 
 \begin_layout Section
@@ -137,161 +125,102 @@ status open
 
 
 \backslash
-PARstart{T}{here}
+PARstart{R}{obocode}
 \end_layout
 
 \end_inset
 
- is a need for a little Evil Red Text in the first paragraph.
- Refer to the IEEEtran documentation (sample document) for more details.
+ is an intelligent autonomous agent architecture that involves the composition
+ of software to control a miniature tank in a hostile playing field.
+ The each round, the playing field is populated with tanks that are identical
+ in anatomy (excluding droids, which are a subset of the team-play bots
+ and will be referred to as droids to avoid potential confusion), but vary
+ in software.
+ As introduced on the Wikipedia page on Robocode, “although the idea of
+ [the game] may seem simple, the actual strategy needed to win is not.” [12]
+ The robots are allowed to move freely about the environment and scan the
+ field for other tanks, as well as shoot at and collide with other robots.
+ Many different techniques have been developed and implemented by the top
+ bots in the game, some of these include intelligent movement (adapting
+ to enemy patterns to avoid damage from enemy fire) and statistical targeting.
+ Robocode has presented the intelligent autonomous agent field with another
+ research domain, which we plan to investigate.
+ The domain allows the growth and development of intelligent autonomous
+ agents to be tested and measured scientifically, practically, and recreationall
+y.
 \end_layout
 
 \begin_layout Section
-Previous Work
+Backround Research
 \end_layout
 
 \begin_layout Standard
-This is only a template remember.
+To properly utilize the tools offered by Robocode, we first had to understand
+ the rules and physics that govern the environment.
+ Also necessary was our responsibility to gain a reasonable comprehension
+ of the battle manager, which manages and executes all operations during
+ each round.
 \end_layout
 
-\begin_layout Section
-Methodology
+\begin_layout Standard
+All robots in Robocode are comprised of three semi-physical elements: a
+ radar, a turret, and a body.
+ The three elements are mounted upon each other in the order mentioned.
+ Observing Robocode physics and intuition, the radar, turret, and body are
+ all able to receive distinct instructions, however, because of their location,
+ the observed movement demonstrates their dependence (e.g., if the turret,
+ which is mounted on the body, is rotated at a certain rate, the rate of
+ rotation, relative to the battlefield is its rotation rate added to the
+ rotation rate of the body).
+ Regarding translational movement, robots in the Robocode environment accelerate
+ and decelerate, as opposed to instantaneously achieving a maximum velocity,
+ when moving from one point to another.
 \end_layout
 
-\begin_layout Theorem
-\begin_inset OptArg
-status collapsed
-
-\begin_layout Plain Layout
-Theorem name
-\end_layout
+\begin_layout Standard
+The concept of time is captured through ticks.
+ Every turn in a battle is a single tick long.
+ The battle manager of Robocode is a built-in loop that controls the game.
+ As shown in figure
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Battle-manager"
 
 \end_inset
 
-For a named theorem or theorem-like environment you need to insert the name
- through 
-\family sans
-Insert\SpecialChar \menuseparator
-Short Title
-\family default
-, as done here.
-\end_layout
-
-\begin_layout Lemma
-If you don't want a theorem or lemma name don't add one.
-\end_layout
-
-\begin_layout Proof
-And here's the proof!
-\end_layout
-
-\begin_layout Section
-Results
+, each robot possesses its own thread, which also contains a queue of events
+ generated throughout the game.
+ These events are handled by the robot, themselves.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
-placement htbp
-wide false
+wide true
 sideways false
 status open
 
 \begin_layout Plain Layout
-\align center
+\begin_inset Graphics
+	filename battle-manager-diagram.gif
 
-\family sans
-A single column figure goes here
+\end_inset
+
+
 \end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Captions go 
-\emph on
-under
-\emph default
- the figure
-\end_layout
+Battle manager and Robocode threading model
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Battle-manager"
 
 \end_inset
 
 
 \end_layout
-
-\end_inset
-
-
-\begin_inset Float table
-placement htbp
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Table captions go 
-\emph on
-above
-\emph default
- the table
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Tabular
-<lyxtabular version="3" rows="2" columns="2">
-<features>
-<column alignment="center" valignment="top" width="0pt">
-<column alignment="center" valignment="top" width="0pt">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-delete
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-this
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-example
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-table
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
 
 \end_inset
 
@@ -304,7 +233,458 @@ table
 \end_layout
 
 \begin_layout Section
-Conclusions
+Initial Objectives, Deliverables, and Research Questions
+\end_layout
+
+\begin_layout Standard
+All objective, deliverables, and research questions have not changed because
+ of their likely feasibility with the allotted time.
+ We are proposing an experimental project based on the Robocode artificial
+ intelligence architecture.
+ The main objective of the project is to demonstrate the ability and the
+ power of intelligent teamwork to overcome numerical disadvantage.
+ This will be demonstrated by designing a small team of bots that are able
+ to effectively use teamwork to overcome the superior numbers of an enemy
+ team.
+ The main deliverable of the project is the final written report.
+ The report will detail our findings and analysis of the capabilities of
+ our robots.
+\end_layout
+
+\begin_layout Section
+Approach
+\end_layout
+
+\begin_layout Standard
+To acquaint ourselves with the domain created by Robocode, we started by
+ reading journal articles (such as the Evolution of emergent behaviors for
+ shooting game characters in robocode [2]) that describe the current state
+ of the field.
+ We also read through the informative articles on the Robocode wiki that
+ detail common strategies and techniques.
+ We will also begin implementing the basic strategies that our bots will
+ use, such as wave surfing, statistical targeting, and circular targeting.
+\end_layout
+
+\begin_layout Standard
+Initially, we will started with a simple bot as a proof-of-concept.
+ Next we graduated to building a 1-vs-1 bot to help perfect many of the
+ individual techniques.
+ This stage is still in progress and is seen as an invaluable stage for
+ development.
+ After the 1-vs-1 bot, we will move on to so-called melee bots that are
+ involved in at least 3-way (often 10-way) free-for-all's.
+ The final stage in the project will be to build a multi-agent system that
+ works together to eliminate enemy bots (individual or teams).
+\end_layout
+
+\begin_layout Standard
+After the experimental phase of the project is complete, we will begin to
+ write up our findings for our final report.
+ We will analyze the results of the experimental phase and numerically analyze
+ the results of the battles and compare the data to the theory on which
+ it is based.
+\end_layout
+
+\begin_layout Section
+Development
+\end_layout
+
+\begin_layout Subsection
+Background Research
+\end_layout
+
+\begin_layout Standard
+We have done a substantial amount of basic research as mentioned in the
+ previous sections.
+ Our research focused on journal articles as well as the excellent source
+ of practical and necessary information that is provided on the Robocode
+ wiki.
+\end_layout
+
+\begin_layout Subsection
+Phase 1: Individual Bots
+\end_layout
+
+\begin_layout Standard
+As mentioned above, one of our main sections of progress was the basic research
+ done to understand Robocode.
+ We initially underestimated the amount of time for the background research
+ and it has pushed our resulting schedule back.
+\end_layout
+
+\begin_layout Standard
+We have done significant work on the 1-vs-1 bot implementation.
+ We have implemented a narrow radar lock which points the radar at the enemy's
+ last known location.
+ The narrow radar lock is an example of a perfect radar lock, which means
+ that the robot will never lose the lock assuming that the robot never skips
+ a turn.
+\end_layout
+
+\begin_layout Standard
+We have also integrated code from the IBM "Tracking your opponents' movement"
+ [15].
+ The central point of this code is a state manager.
+ The state manager chooses the current state of the bot by looking at and
+ comparing the performance characteristics of previous states.
+ This code was integrated by including it within our project and setting
+ it to inherit from our own ExtendedBot, which inherits from AdvancedBot.
+\end_layout
+
+\begin_layout Standard
+Currently we have not conducted much work on movement and targeting beyond
+ various simple movement behaviors such as strafing and moving to various
+ points.
+ We have also created various helper functions and classes such as one to
+ be used to assist in tracking an enemy and ones to assist in moving in
+ various directions and even firing at points based on their coordinates.
+\end_layout
+
+\begin_layout Subsection
+Phase 2: Team Bots
+\end_layout
+
+\begin_layout Standard
+Transitioning to the main focus of our project, this section discusses the
+ development we have made with respect to building a team.
+ Currently, we have met our initial objective for phase 2, which can be
+ crudely described as implementing a simple Robocode team.
+ The definition of a simple team has been extended only so far as to the
+ creation of a group of robots that successfully communicate amongst each
+ other.
+ The extent, level, and direction of communication depends on the team model
+ we wish to construct.
+ As we continue to develop our Robocode team, the characteristics of the
+ team as well as the communication utilized will more strictly represent
+ the type of architecture and strategy we have adopted.
+\end_layout
+
+\begin_layout Section
+Expected Development
+\end_layout
+
+\begin_layout Subsection
+Phase 1: Individual Bots
+\end_layout
+
+\begin_layout Standard
+The next part of our development will focus on implementing some advanced
+ targeting and movement strategies.
+ We have not decided exactly which targeting strategy we want to implement
+ besides the simple head-on targeting we have already implemented.
+ From our research, the next type of targeting we plan to implement is linear
+ targeting which assumes that the enemy robot will continue moving in the
+ same direction and at same speed as it is when spotted.
+ Next we will implement circular targeting which is a slightly more advanced
+ version of linear targeting and assumes that the enemy robot will continue
+ moving at the same speed and same rate of rotation.
+ For advanced targeting we are most likely looking at some form of statistical
+ targeting.
+\end_layout
+
+\begin_layout Standard
+For movement strategies we are considering some form of wave surfing.
+ Wave surfing guesses when enemies have fired by looking for drops in energy
+ levels.
+ Every time an enemy fires it is considered to be a wave to avoid.
+ The robot then looks at these wave and travels to the location that is
+ least dangerous.
+ Wave surfing is used by many of the champion robots along with some other
+ strategies.
+\end_layout
+
+\begin_layout Subsection
+Phase 2: Team Bots
+\end_layout
+
+\begin_layout Standard
+While we are working on phase 1, we will also concurrently be working on
+ phase 2, which is team based robots.
+ Our final goal is to use a small team that uses intelligent teamwork to
+ overcome the superior numbers of a larger team that uses dumb teamwork.
+ Dumb teamwork means that the robots simply do not attack each other, which
+ implies that no communication is actually happening.
+ The general notion of intelligent teamwork should be considered to be demonstra
+ted successfully if a group of n robots can consistently defeat a team of
+ n+1 or more robots.
+\end_layout
+
+\begin_layout Standard
+Summarizing our progress with respect to the project theme, we must transition
+ from a single leader team to a multi-agent-based team, in which all agents
+ contribute to the decision of the team and ultimately make their own decision
+ on what action to take.
+ Transitioning from our strategy of exploiting sheer numbers to intelligent
+ team work will be demonstrated by a steady decrease in numbers of bots
+ on our team.
+ Also, although possibly being considered to be more recreational than not,
+ we will further refine the size of our team to battle against the top melee
+ bots in the league.
+ This final task will be a demonstration of intelligent teamwork to overcome
+ highly capable bots that would in many other situations be statistically
+ unbeatable.
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+[1] J.
+ Frøkjær, M.
+ Kristiansen, D.
+ Malthesen, R.
+ Suurland, P.
+ Hansen, I.
+ Larsen, T.
+ Oddershede, "Robocode: Development of a Robocode Team," The University
+ of Aalborg, Department of Computer Science, December 2004, [Online].
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.117.3830&rep=rep1&type=pdf
+\end_layout
+
+\end_inset
+
+ {Accessed Feb, 09, 2010}.
+\end_layout
+
+\begin_layout Standard
+[2] Hong, J.-H., and S.-B.
+ Cho, "Evolution of Emergent Behaviors for Shooting Game Characters in Robocode"
+, Congress on Evolutionary Computation, Volume 1, Pages 634–638, 2004.
+ Available:
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://sclab.yonsei.ac.kr/~hjinh/PAPER/IC2004-1.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[3] K.
+ Hartness, "Robocode: using games to teach artificial intelligence," J.
+ Comput.
+ Small Coll.
+ 19, Apr.
+ 4, 2004, Pages 287-291.
+\end_layout
+
+\begin_layout Standard
+[4] J.
+ O'Kelly and J.
+ P.
+ Gibson, "RoboCode & problem-based learning: a non-prescriptive approach
+ to teaching programming," SIGCSE Bull.
+ 38, Sep.
+ 3, 2006, [Online].
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://doi.acm.org/10.1145/1140123.1140182
+\end_layout
+
+\end_inset
+
+ {Accessed Feb 10, 2010}.
+\end_layout
+
+\begin_layout Standard
+[5] Kobayashi, K.; Uchida, Y.; Watanabe, K.; , "A study of battle strategy
+ for the Robocode," SICE 2003 Annual Conference, vol.3, no., pp.
+ 3373- 3376 Vol.3, 4-6 Aug.
+ 2003 doi: 10.1109/SICE.2003.1323931 Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=1323931
+\end_layout
+
+\end_inset
+
+{Accessed Feb 11, 2010}.
+\end_layout
+
+\begin_layout Standard
+[6] Y.
+ Shichel, E.
+ Ziserman, M.
+ Sipper, "GP-Robocode: Using Genetic Programming to Evolve Robocode Players,"
+ Department of Computer Science, Ben-Gurion University, Israel, [Online].
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://www.cs.bgu.ac.il/~sipper/papabs/eurogprobo-final.pdf
+\end_layout
+
+\end_inset
+
+ {Accessed Feb 12, 2010}.
+\end_layout
+
+\begin_layout Standard
+[7] J.
+ Eisenstein, "Evolving Robocode Tank Fighters." Technical Report AIM-2003-023,
+ AI Lab, Massachusetts Institute Of Technology (2003) 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://citeseer.ist.psu.edu/647963.html 
+\end_layout
+
+\end_inset
+
+{Accessed Feb 12, 2010}.
+\end_layout
+
+\begin_layout Standard
+[8] U.
+ Endriss, N.
+ Maudet, F.
+ Sadri, F.
+ Toni, "Logic-based Agent Communication Protocols, "Department of Computing,
+ Imperial College London, [Online].
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.711&rep=rep1&type=pdf
+\end_layout
+
+\end_inset
+
+ {Accessed Feb 12, 2010}.
+\end_layout
+
+\begin_layout Standard
+[9] R.
+ Béjar, C.
+ Domshlak, C.
+ Fernández, C.
+ Gomes, B.
+ Krishnamachari, B.
+ Selman, M.
+ Valls, "Communication and Computation in Distributed CSP Algorithms", Artificia
+l Intelligence, Volume 161, Issues 1-2, Pages 117-147, January 2005.
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://www.cs.cornell.edu/selman/papers/pdf/03.ants-book.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[10] M.
+ A.
+ Salido, A.
+ Giret, "Feasible distributed CSP models for scheduling problems," Engineering
+ Applications of Artificial Intelligence, Volume 21, Issue 5, Pages 723-732,
+ August 2008.
+\end_layout
+
+\begin_layout Standard
+[11] V.
+ Iorio, R.
+ Bigonha, M.
+ Bigonha, A.
+ Oliveira, E.
+ Miguel, "What's the Name of the Game? Formal Specification of Artificial
+ Intelligence Games," Electronic Notes in Theoretical Computer Science,
+ Volume 130, Proceedings of the Brazilian Symposium on Formal Methods (SBMF
+ 2004), May 12, 2005, Pages 129-150, ISSN 1571-0661, DOI: 10.1016/j.entcs.2005.03.008.
+ [Online].
+ Available: 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://www.sciencedirect.com/science/article/B75H1-4G604M7-8/2/5135e3dc512ba349f72
+339a1fe7273bd
+\end_layout
+
+\end_inset
+
+ {Accessed Feb 12, 2010}.
+\end_layout
+
+\begin_layout Standard
+[12] 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://en.wikipedia.org/wiki/Robocode
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[13] 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://robowiki.net/wiki/Category:Advanced_Targeting_Strategies
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[14] 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://webee.technion.ac.il/control/info/Projects/Students/2007/Avishai%20Livne/WWW
+/robocode/robocode_design.doc
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+[15] "Secrets from the Robocode Masters" 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+http://www.ibm.com/developerworks/library/j-robotips/index.html
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -356,62 +736,6 @@ options "IEEEbib"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Biography
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-Your Name
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
- All about you and the what your interests are.
- Don't forget to put your name in between a pair of {}'s that are set as
- raw TeX.
-\end_layout
-
-\begin_layout --Separator--
-
-\end_layout
-
-\begin_layout Biography
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\end_inset
-
-Coauthor
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-} 
-\end_layout
-
-\end_inset
-
-Same again for the co-author.
 \end_layout
 
 \end_body
