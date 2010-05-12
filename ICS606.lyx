@@ -69,7 +69,10 @@ Jason Axelson, Chris Ho
 \end_layout
 
 \begin_layout Abstract
-This is a report on our progress for our final project.
+This is a report on our progress and development for our final project.
+ This paper introduces the Robocode environment, the objectives that were
+ set and met during the course of the project, and the design methodology
+ and strategies implemented in the realization of the final product.
 \end_layout
 
 \begin_layout MarkBoth
@@ -233,7 +236,7 @@ name "fig:Battle-manager"
 \end_layout
 
 \begin_layout Section
-Initial Objectives, Deliverables, and Research Questions
+Initial Objectives
 \end_layout
 
 \begin_layout Standard
@@ -249,6 +252,10 @@ All objective, deliverables, and research questions have not changed because
  The main deliverable of the project is the final written report.
  The report will detail our findings and analysis of the capabilities of
  our robots.
+\end_layout
+
+\begin_layout Section
+Accomplished Objectives
 \end_layout
 
 \begin_layout Section
@@ -284,6 +291,204 @@ After the experimental phase of the project is complete, we will begin to
  We will analyze the results of the experimental phase and numerically analyze
  the results of the battles and compare the data to the theory on which
  it is based.
+\end_layout
+
+\begin_layout Section
+Design Methodology
+\end_layout
+
+\begin_layout Subsection
+Targeting
+\end_layout
+
+\begin_layout Subsubsection
+Guessing Factor
+\end_layout
+
+\begin_layout Standard
+A few calculations must be performed to follow the traditional means of
+ implementing Guess Factor targeting.
+ A realization of two limits must first be calculated.
+ The first is how far foward the tracked bot can travel at full speed in
+ the time it would take for the fired bullet to reach the bot.
+ The other is how far the bot can travel, except in the opposite direction.
+ Being a form of statistical targeting, a guess between -1 and 1 is performed,
+ with -1 being the latter calculated point and 1 being the formerly calculated
+ point.
+ The results (hit or not) are recorded and further guess work is performed
+ with these results in mind.
+\end_layout
+
+\begin_layout Subsubsection
+Linear Targeting
+\end_layout
+
+\begin_layout Standard
+Linear targeting is based off the expectation that the enemy bot holds its
+ current heading and speed.
+ When considering linear targeting, an approximation can be used to reduce
+ the amount of code space allocated to its implementation.
+ This method of implementation is summarized first.
+ Staying true to the belief that the bot will maintain both heading and
+ velocity, the lateral velocity of the tracked bot is calculated.
+ This is the velocity parallel to the tracking bot.
+ A firing angle offset is then calculated to compensate for this lateral
+ velocity.
+ This is the angle at which the tracking bot must fire to successfully hit
+ the targeted bot if its current course is maintained.
+ The calculation performed to obtain this angle is first to find the arcsin((lat
+eral velocity * bullet travel time) / bullet velocity * bullet travel time)).
+ When using applying the sine function to both sides and using small-angle
+ approximations, the first angle is approximately equivalent to the quotient
+ of the lateral velocity and the bullet velocity.
+ This final firing angle is then calculated by taking into account the absolute
+ bearing and the gun heading by adding and then subtracting, respectively.
+\end_layout
+
+\begin_layout Standard
+Explain exact method.
+\end_layout
+
+\begin_layout Subsubsection
+Circular Targeting
+\end_layout
+
+\begin_layout Standard
+Circular targeting is the strategy implemented which is analogous to linear
+ targeting, except the targeted bot is believed to be maintaining its current
+ turn rate and current velocity, or otherwise said to be moving in circles
+ or arcs.
+ When implementing this targeting method, two obvious values must be obtained.
+ The first calculation requires two scans to determines the bot's turning
+ rate.
+ This approximation is performed by taking the difference between the bot's
+ headings and scaling appropriately by the time period between scans.
+ Next, the current position of the target bot is determined.
+ Because the assumption that the target will continue to follow the circle
+ it is currently traversing is followed, its position can be predicted.
+\end_layout
+
+\begin_layout Standard
+Like linear targeting, the time at which the fired bullet will hit the targeted
+ bot is essential.
+ First, the time it would take for a bullet to arrive at the target's current
+ position is calculated.
+ However, to improve the approximation, an iterative method is adopted.
+ Presenting equations provided by a circular targeting tutorial, it can
+ be seen that a prediction of the tracked bot's position at an arbitrary
+ time can be obtained.
+\end_layout
+
+\begin_layout Standard
+http://robowiki.net/wiki/Circular_Targeting/Walkthrough
+\end_layout
+
+\begin_layout Subsection
+Movement
+\end_layout
+
+\begin_layout Subsubsection
+Wave Surfing
+\end_layout
+
+\begin_layout Standard
+A strategy typically implemented during 1 vs.
+ 1 situations is wave surfing.
+ Because bots in robocode have no information on where bullets are in the
+ arena, energy levels must be monitored to predict bullet locations.
+ When tracking an enemy bot, drops in energy levels provide an accurate
+ way of tracking an enemy's wave.
+ This tracked wave 
+\end_layout
+
+\begin_layout Subsubsection
+Minimum-risk Movement
+\end_layout
+
+\begin_layout Standard
+A melee inspired strategy employed by our bots is called a minimum risk
+ movement strategy.
+ The process of carrying out a minimum risk movement strategy involves selecting
+ a series of reachable points and assigning a rise factor to each of these
+ points.
+ The resulting action is to move to the lowest-risk location.
+ Issues that are taken into account when the risk factor is calculated are
+ 
+\end_layout
+
+\begin_layout Subsection
+Radar
+\end_layout
+
+\begin_layout Subsubsection
+Narrow Lock Radar
+\end_layout
+
+\begin_layout Standard
+A narrow lock radar is a form of a perfect radar.
+ That is, this type of radar does not lose its lock once it has gained one.
+ The concept behind implementing a narrow lock radar is simple.
+ If the radar constantly points at the tracked bot's last known location,
+ the laws of robocode physics do not allow the bot to esacpe.
+ Further explained, the maximum distance a bot can move in any single turn
+ is 8 pixels.
+ A bots body is 36 pixels wide, or 18 pixels wide in either direction from
+ the bot's center.
+ 
+\end_layout
+
+\begin_layout Standard
+Based on the rules of Robocode, a minor issue arises if the enemy bot remains
+ still for two or more turns.
+ The effects of this rule becomes apparent after these two turns that the
+ enemy bot remains still because the scanning robot will stop scanning automatic
+ally if its radar is not spinning.
+ To avoid losing the established lock, a call to the bot's scan function
+ must be executed manually.
+ Another way to overcome the issue is to keep the radar moving and to secure
+ the lock by keeping the scan arc on the bot.
+\end_layout
+
+\begin_layout Subsubsection
+Oldest-scanned Radar
+\end_layout
+
+\begin_layout Standard
+An elementary type of melee radar that has been established is called the
+ oldest scanned method.
+ This strategy is intuitively effective and will cause the radar to spin
+ past all bots on the battlefield and then reverse its direction until all
+ bots are passed, again.
+ This process is continuously repeated.
+ Because a radar spin can cover an entire circle in eight ticks, the radar
+ will continuously spin, instead of reversing direction, if the first spin
+ takes more than four ticks to completely cover all bots.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Spinning
+\end_layout
+
+\begin_layout Standard
+Although looked at as being completely naive and elementary, a simple spin,
+ or continuously spinning radar strategy is used to accomplish the obvious,
+ that is, to scan in a full circle around the tracking bot.
+ Although ineffective, the small amount of development time to and imagination
+ required to implement this strategy is often used as a first choice strategy
+ to gain a feel for the game or when code size is extremely limited.
+\end_layout
+
+\begin_layout Subsection
+State Management
+\end_layout
+
+\begin_layout Subsection
+Team Management
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Section
@@ -445,6 +650,7 @@ References
 status collapsed
 
 \begin_layout Plain Layout
+
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.117.3830&rep=rep1&type=pdf
 \end_layout
 
@@ -462,6 +668,7 @@ http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.117.3830&rep=rep1&type=
 status collapsed
 
 \begin_layout Plain Layout
+
 http://sclab.yonsei.ac.kr/~hjinh/PAPER/IC2004-1.pdf
 \end_layout
 
@@ -492,6 +699,7 @@ http://sclab.yonsei.ac.kr/~hjinh/PAPER/IC2004-1.pdf
 status collapsed
 
 \begin_layout Plain Layout
+
 http://doi.acm.org/10.1145/1140123.1140182
 \end_layout
 
@@ -529,6 +737,7 @@ http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=1323931
 status collapsed
 
 \begin_layout Plain Layout
+
 http://www.cs.bgu.ac.il/~sipper/papabs/eurogprobo-final.pdf
 \end_layout
 
@@ -545,6 +754,7 @@ http://www.cs.bgu.ac.il/~sipper/papabs/eurogprobo-final.pdf
 status collapsed
 
 \begin_layout Plain Layout
+
 http://citeseer.ist.psu.edu/647963.html 
 \end_layout
 
@@ -565,6 +775,7 @@ http://citeseer.ist.psu.edu/647963.html
 status collapsed
 
 \begin_layout Plain Layout
+
 http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.711&rep=rep1&type=pdf
 \end_layout
 
@@ -588,6 +799,7 @@ l Intelligence, Volume 161, Issues 1-2, Pages 117-147, January 2005.
 status collapsed
 
 \begin_layout Plain Layout
+
 http://www.cs.cornell.edu/selman/papers/pdf/03.ants-book.pdf
 \end_layout
 
@@ -621,6 +833,7 @@ http://www.cs.cornell.edu/selman/papers/pdf/03.ants-book.pdf
 status collapsed
 
 \begin_layout Plain Layout
+
 http://www.sciencedirect.com/science/article/B75H1-4G604M7-8/2/5135e3dc512ba349f72
 339a1fe7273bd
 \end_layout
@@ -636,6 +849,7 @@ http://www.sciencedirect.com/science/article/B75H1-4G604M7-8/2/5135e3dc512ba349f
 status collapsed
 
 \begin_layout Plain Layout
+
 http://en.wikipedia.org/wiki/Robocode
 \end_layout
 
@@ -650,6 +864,7 @@ http://en.wikipedia.org/wiki/Robocode
 status collapsed
 
 \begin_layout Plain Layout
+
 http://robowiki.net/wiki/Category:Advanced_Targeting_Strategies
 \end_layout
 
@@ -664,6 +879,7 @@ http://robowiki.net/wiki/Category:Advanced_Targeting_Strategies
 status collapsed
 
 \begin_layout Plain Layout
+
 http://webee.technion.ac.il/control/info/Projects/Students/2007/Avishai%20Livne/WWW
 /robocode/robocode_design.doc
 \end_layout
@@ -679,6 +895,7 @@ http://webee.technion.ac.il/control/info/Projects/Students/2007/Avishai%20Livne/
 status collapsed
 
 \begin_layout Plain Layout
+
 http://www.ibm.com/developerworks/library/j-robotips/index.html
 \end_layout
 
