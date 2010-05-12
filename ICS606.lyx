@@ -19,7 +19,16 @@
 \float_placement tbh
 \paperfontsize 12
 \spacing double
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize letterpaper
 \use_geometry true
 \use_amsmath 0
@@ -265,8 +274,14 @@ Approach
 \begin_layout Standard
 To acquaint ourselves with the domain created by Robocode, we started by
  reading journal articles (such as the Evolution of emergent behaviors for
- shooting game characters in robocode [2]) that describe the current state
- of the field.
+ shooting game characters in robocode 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "EvolutionEmergentBehaviors"
+
+\end_inset
+
+) that describe the current state of the field.
  We also read through the informative articles on the Robocode wiki that
  detail common strategies and techniques.
  We will also begin implementing the basic strategies that our bots will
@@ -302,7 +317,7 @@ Targeting
 \end_layout
 
 \begin_layout Subsubsection
-Guessing Factor
+Guess Factor Targeting
 \end_layout
 
 \begin_layout Standard
@@ -336,8 +351,38 @@ Linear targeting is based off the expectation that the enemy bot holds its
  velocity.
  This is the angle at which the tracking bot must fire to successfully hit
  the targeted bot if its current course is maintained.
- The calculation performed to obtain this angle is first to find the arcsin((lat
-eral velocity * bullet travel time) / bullet velocity * bullet travel time)).
+ The calculation performed to obtain this angle is first to find the offset
+ angle (
+\begin_inset Formula $\theta$
+\end_inset
+
+).
+\begin_inset Formula \[
+\theta=\frac{\sin^{-1}(v_{l}*t)}{v_{b}*t}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is the offset angle, 
+\begin_inset Formula $v_{l}$
+\end_inset
+
+ is the lateral velocity, 
+\begin_inset Formula $t$
+\end_inset
+
+ is the bullet travel time, and 
+\begin_inset Formula $v_{b}$
+\end_inset
+
+ is the bullet velocity (which then depends firepower).
  When using applying the sine function to both sides and using small-angle
  approximations, the first angle is approximately equivalent to the quotient
  of the lateral velocity and the bullet velocity.
@@ -346,7 +391,16 @@ eral velocity * bullet travel time) / bullet velocity * bullet travel time)).
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
 Explain exact method.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -471,23 +525,179 @@ Spinning
 \end_layout
 
 \begin_layout Standard
-Although looked at as being completely naive and elementary, a simple spin,
- or continuously spinning radar strategy is used to accomplish the obvious,
- that is, to scan in a full circle around the tracking bot.
- Although ineffective, the small amount of development time to and imagination
- required to implement this strategy is often used as a first choice strategy
- to gain a feel for the game or when code size is extremely limited.
+Although looked at as being completely naive and elementary, a simple continuous
+ly spinning radar, is used to accomplish the obvious, that is, to scan in
+ a full circle around the tracking bot.
+ Although relatively ineffective, the small amount of development time to
+ and imagination required to implement this strategy is often used as a
+ first choice strategy to gain a feel for the game or when code size is
+ extremely limited.
 \end_layout
 
 \begin_layout Subsection
 State Management
 \end_layout
 
+\begin_layout Standard
+IBM was gracious enough to open-source some of their code
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+http://www.ibm.com/developerworks/java/library/j-movement/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ from their article "Tracking your opponents' movement" 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "SecretsRobocodeMasters"
+
+\end_inset
+
+.
+ The central point of this code is a state manager.
+ The state manager chooses the next state of the bot by looking at all of
+ the loaded states and asking each of them if they are currently valid,
+ next it compares the performance characteristics of previous states, and
+ chooses the best performing state.
+\end_layout
+
+\begin_layout Standard
+Each robot can have several different states running at each time.
+ We decided to have three states: movement, gun, and radar.
+ This helps to keep the code nice and clean, each new technique we add we
+ just need to make it into a new state.
+ However, that is not to say that the integration required is minimal, the
+ code often requires much modification.
+ Some of their underlying assumptions are often wrong such as the battlefield
+ always being 
+\begin_inset Formula $800\times600$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We typically had two different sets of states.
+ Those used for melee, that is greater than one enemy, and those for 1-vs-1,
+ that is exactly one enemy.
+ The states within those sets of states are then choosen based on the statistics.
+\end_layout
+
+\begin_layout Standard
+This code was integrated by including it within our project and setting
+ the ExtendedBot class to inherit from our own ExtendedBotUH, which then
+ inherits from the actual Robocode class TeamRobot when then inherits from
+ AdvancedBot.
+ We then based much of our development on developing and perfecting various
+ states for the robot.
+ This made it much easier to create complex states that need input from
+ many different events such as wave surfing.
+\end_layout
+
 \begin_layout Subsection
 Team Management
 \end_layout
 
+\begin_layout Subsubsection
+Problems encountered
+\end_layout
+
 \begin_layout Standard
+In the course of our development of our team management we made a startling
+ discovery, the TeamRobot.isTeamate() function did not work! We passed it
+ the name of a teammate and it returned false.
+ This was eventually traced down to a difference in representation for developme
+nt versus packaged bots.
+ Development bots have an asterisk in their name.
+ However, when you check the names of your teammates through the TeamRobot.getTea
+mmates() function it does not include the asterisk.
+ We hacked around this as shown in 
+\begin_inset CommandInset ref
+LatexCommand prettyref
+reference "alg:Fixing-Name-Bug"
+
+\end_inset
+
+.
+ This was eventually fixed in a release of robocode near the end of our
+ project.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide true
+sideways false
+status open
+
+\begin_layout LyX-Code
+public static String fixName(String name) {
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+// Hack because of asterisk error
+\end_layout
+
+\begin_layout LyX-Code
+if(name.contains("*")) {
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+return name;
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+} 
+\end_layout
+
+\begin_layout LyX-Code
+String fixedName = name.replace(" (", "* (");
+\end_layout
+
+\begin_layout LyX-Code
+return fixedName;
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+}
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Fixing Name Bug
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:Fixing-Name-Bug"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -529,7 +739,14 @@ We have done significant work on the 1-vs-1 bot implementation.
 
 \begin_layout Standard
 We have also integrated code from the IBM "Tracking your opponents' movement"
- [15].
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "SecretsRobocodeMasters"
+
+\end_inset
+
+.
  The central point of this code is a state manager.
  The state manager chooses the current state of the bot by looking at and
  comparing the performance characteristics of previous states.
@@ -631,12 +848,14 @@ Summarizing our progress with respect to the project theme, we must transition
  unbeatable.
 \end_layout
 
-\begin_layout Section
-References
-\end_layout
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
 
-\begin_layout Standard
-[1] J.
+\end_inset
+
+J.
  Frøkjær, M.
  Kristiansen, D.
  Malthesen, R.
@@ -659,8 +878,14 @@ http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.117.3830&rep=rep1&type=
  {Accessed Feb, 09, 2010}.
 \end_layout
 
-\begin_layout Standard
-[2] Hong, J.-H., and S.-B.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "EvolutionEmergentBehaviors"
+
+\end_inset
+
+Hong, J.-H., and S.-B.
  Cho, "Evolution of Emergent Behaviors for Shooting Game Characters in Robocode"
 , Congress on Evolutionary Computation, Volume 1, Pages 634–638, 2004.
  Available:
@@ -677,8 +902,14 @@ http://sclab.yonsei.ac.kr/~hjinh/PAPER/IC2004-1.pdf
 
 \end_layout
 
-\begin_layout Standard
-[3] K.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+K.
  Hartness, "Robocode: using games to teach artificial intelligence," J.
  Comput.
  Small Coll.
@@ -686,8 +917,14 @@ http://sclab.yonsei.ac.kr/~hjinh/PAPER/IC2004-1.pdf
  4, 2004, Pages 287-291.
 \end_layout
 
-\begin_layout Standard
-[4] J.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-7"
+
+\end_inset
+
+J.
  O'Kelly and J.
  P.
  Gibson, "RoboCode & problem-based learning: a non-prescriptive approach
@@ -708,9 +945,15 @@ http://doi.acm.org/10.1145/1140123.1140182
  {Accessed Feb 10, 2010}.
 \end_layout
 
-\begin_layout Standard
-[5] Kobayashi, K.; Uchida, Y.; Watanabe, K.; , "A study of battle strategy
- for the Robocode," SICE 2003 Annual Conference, vol.3, no., pp.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-8"
+
+\end_inset
+
+Kobayashi, K.; Uchida, Y.; Watanabe, K.; , "A study of battle strategy for
+ the Robocode," SICE 2003 Annual Conference, vol.3, no., pp.
  3373- 3376 Vol.3, 4-6 Aug.
  2003 doi: 10.1109/SICE.2003.1323931 Available: 
 \begin_inset Flex URL
@@ -726,8 +969,14 @@ http://ieeexplore.ieee.org/search/srchabstract.jsp?tp=&arnumber=1323931
 {Accessed Feb 11, 2010}.
 \end_layout
 
-\begin_layout Standard
-[6] Y.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-9"
+
+\end_inset
+
+Y.
  Shichel, E.
  Ziserman, M.
  Sipper, "GP-Robocode: Using Genetic Programming to Evolve Robocode Players,"
@@ -746,8 +995,14 @@ http://www.cs.bgu.ac.il/~sipper/papabs/eurogprobo-final.pdf
  {Accessed Feb 12, 2010}.
 \end_layout
 
-\begin_layout Standard
-[7] J.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-10"
+
+\end_inset
+
+J.
  Eisenstein, "Evolving Robocode Tank Fighters." Technical Report AIM-2003-023,
  AI Lab, Massachusetts Institute Of Technology (2003) 
 \begin_inset Flex URL
@@ -763,8 +1018,14 @@ http://citeseer.ist.psu.edu/647963.html
 {Accessed Feb 12, 2010}.
 \end_layout
 
-\begin_layout Standard
-[8] U.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-11"
+
+\end_inset
+
+U.
  Endriss, N.
  Maudet, F.
  Sadri, F.
@@ -784,8 +1045,14 @@ http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.4.711&rep=rep1&type=pdf
  {Accessed Feb 12, 2010}.
 \end_layout
 
-\begin_layout Standard
-[9] R.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-12"
+
+\end_inset
+
+R.
  Béjar, C.
  Domshlak, C.
  Fernández, C.
@@ -808,8 +1075,14 @@ http://www.cs.cornell.edu/selman/papers/pdf/03.ants-book.pdf
 
 \end_layout
 
-\begin_layout Standard
-[10] M.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-13"
+
+\end_inset
+
+M.
  A.
  Salido, A.
  Giret, "Feasible distributed CSP models for scheduling problems," Engineering
@@ -817,8 +1090,14 @@ http://www.cs.cornell.edu/selman/papers/pdf/03.ants-book.pdf
  August 2008.
 \end_layout
 
-\begin_layout Standard
-[11] V.
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-14"
+
+\end_inset
+
+V.
  Iorio, R.
  Bigonha, M.
  Bigonha, A.
@@ -843,10 +1122,16 @@ http://www.sciencedirect.com/science/article/B75H1-4G604M7-8/2/5135e3dc512ba349f
  {Accessed Feb 12, 2010}.
 \end_layout
 
-\begin_layout Standard
-[12] 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-15"
+
+\end_inset
+
+
 \begin_inset Flex URL
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -858,10 +1143,16 @@ http://en.wikipedia.org/wiki/Robocode
 
 \end_layout
 
-\begin_layout Standard
-[13] 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-16"
+
+\end_inset
+
+
 \begin_inset Flex URL
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -873,8 +1164,14 @@ http://robowiki.net/wiki/Category:Advanced_Targeting_Strategies
 
 \end_layout
 
-\begin_layout Standard
-[14] 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-17"
+
+\end_inset
+
+
 \begin_inset Flex URL
 status collapsed
 
@@ -889,8 +1186,14 @@ http://webee.technion.ac.il/control/info/Projects/Students/2007/Avishai%20Livne/
 
 \end_layout
 
-\begin_layout Standard
-[15] "Secrets from the Robocode Masters" 
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "SecretsRobocodeMasters"
+
+\end_inset
+
+"Secrets from the Robocode Masters" 
 \begin_inset Flex URL
 status collapsed
 
@@ -910,7 +1213,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Note Note
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Change this paragraphs style to 'Standard' to enable
