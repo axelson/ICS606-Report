@@ -536,6 +536,13 @@ ly spinning radar, is used to accomplish the obvious, that is, to scan in
 
 \begin_layout Subsection
 State Management
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:State-Management"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -548,6 +555,7 @@ status collapsed
 status open
 
 \begin_layout Plain Layout
+
 http://www.ibm.com/developerworks/java/library/j-movement/
 \end_layout
 
@@ -599,11 +607,37 @@ We typically had two different sets of states.
 This code was integrated by including it within our project and setting
  the ExtendedBot class to inherit from our own ExtendedBotUH, which then
  inherits from the actual Robocode class TeamRobot when then inherits from
- AdvancedBot.
+ AdvancedBot
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Since this is confusing in text form, look at 
+\begin_inset CommandInset ref
+LatexCommand prettyref
+reference "fig:Class-Diagram"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
  We then based much of our development on developing and perfecting various
  states for the robot.
  This made it much easier to create complex states that need input from
  many different events such as wave surfing.
+\end_layout
+
+\begin_layout Standard
+The State Manager also includes publisher/subscriber support so that states
+ only get the specific events that they subscribe to.
+ This is to help performance of the resulting system.
+ Unfortunately for us, the State Manger did not include support for the
+ onPaint event that is needed for painting debug information on the screen.
+ So the State Manger and ExtendedBot were modified to include this support.
 \end_layout
 
 \begin_layout Subsection
@@ -780,6 +814,129 @@ Transitioning to the main focus of our project, this section discusses the
  As we continue to develop our Robocode team, the characteristics of the
  team as well as the communication utilized will more strictly represent
  the type of architecture and strategy we have adopted.
+\end_layout
+
+\begin_layout Subsection
+Software Architecture
+\end_layout
+
+\begin_layout Standard
+An extendable modular architecture was used in the construction of the robots.
+ The full class diagram for the code is given in 
+\begin_inset CommandInset ref
+LatexCommand prettyref
+reference "fig:Class-Diagram"
+
+\end_inset
+
+.
+ There were several main Java classes that were used: ExtendedBotUH, ExtendedBot
+, BotUtility, BotInfo, and BotCollection.
+ The basis of much of the code were states that were written for the State
+ Manger, listed in 
+\begin_inset CommandInset ref
+LatexCommand prettyref
+reference "sub:State-Management"
+
+\end_inset
+
+, this falls under the ExtendedBot class, since that was the class that
+ was resonsible for interfacing with the State Manager.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename class-diagram.jpg
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Class Diagram
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Class-Diagram"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+ExtendedBotUH
+\end_layout
+
+\begin_layout Standard
+Clocking in at over 500 lines of code we have our ExtendedBotUH class.
+ This class inherits from TeamRobot because when we do teams we need many
+ of the functions from TeamRobot.
+ Luckily this doesn't cause a problem when we are not doing teams.
+ The ExtendedBotUH class does many functions, one of the sub-classes within
+ the file is our GunManager.
+ The GunManager is responsible for the low level handling of the gun.
+ It ensures that the gun is only fired when it is pointing in the correct
+ direction, doesn't have too much heat, and isn't pointing at a teammate!
+\end_layout
+
+\begin_layout Standard
+The ExtendedBotUH class also has many helper functions, such as moveTo(),
+ moveToward(), turnGunTo(), as well as some of the simpler targeting methods
+ that don't fully need their own state.
+ For example the moveTo() function can be given a point and the robot will
+ then automatically move to that point.
+ It helps abstract away much of the trigonometry which helps make the code
+ easier to read and maintain.
+ Also, using linear targeting is as simple as scanning a robot, using the
+ ScannedRobotEvent to generate a BotInfo class and then passing that BotInfo
+ class to the linearTargeting() function.
+\end_layout
+
+\begin_layout Standard
+The BotUtility class contains various utility funcitons that don't depend
+ on the robot object itself.
+ Things like calculating the damage done by a bullet and checking if a value
+ is within a given certain range.
+ The BotInfo class is used throughout the code to represent information
+ about any other bot that the main robot knows about.
+ This includes enemeies as well as teammates.
+ The BotInfo class doesn't store the relative information that it receives
+ from the ScannedRobotEvent, instead it stores the absolute information
+ and computes the relative information when it is asked for it.
+ This allows the BotInfo class to be passed between teammates.
+\end_layout
+
+\begin_layout Standard
+The BotCollection class was also fundamental to the project.
+ The BotCollection is basically a collection of BotInfo objects.
+ The BotCollection can either contain teammates, or enemies.
+ The BotCollection class helps to abstract away the updating of the enemies,
+ all that is needed is to tell the BotCollection to update its list based
+ upon a RobotDeathEvent or a ScannedRobotEvent and it will automatically
+ update that entry or remove the entry if that robot has died.
+ BotCollection also facilitates the choosing of a target with the least
+ energy, which is helpful for melee battles.
 \end_layout
 
 \begin_layout Section
