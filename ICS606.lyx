@@ -143,23 +143,23 @@ PARstart{R}{obocode}
 \end_inset
 
  is an intelligent autonomous agent architecture that involves the composition
- of software to control a miniature tank in a hostile playing field.
- The each round, the playing field is populated with tanks that are identical
+ of software to control miniature tanks in a hostile playing field.
+ Each round, the playing field is populated with tanks that are identical
  in anatomy (excluding droids, which are a subset of the team-play bots
- and will be referred to as droids to avoid potential confusion), but vary
- in software.
+ and will be referred to as droids to avoid potential confusion, if subsequently
+ mentioned), but varying in software.
  As introduced on the Wikipedia page on Robocode, “although the idea of
  [the game] may seem simple, the actual strategy needed to win is not.” [12]
  The robots are allowed to move freely about the environment and scan the
  field for other tanks, as well as shoot at and collide with other robots.
  Many different techniques have been developed and implemented by the top
- bots in the game, some of these include intelligent movement (adapting
+ bots in the game, some of these include intelligent movement (e.g., adapting
  to enemy patterns to avoid damage from enemy fire) and statistical targeting.
- Robocode has presented the intelligent autonomous agent field with another
+ Robocode has presented an intelligent autonomous agent field with another
  research domain, which we plan to investigate.
  The domain allows the growth and development of intelligent autonomous
- agents to be tested and measured scientifically, practically, and recreationall
-y.
+ agents and agent teams to be tested and measured scientifically, practically,
+ and recreationally.
 \end_layout
 
 \begin_layout Section
@@ -180,10 +180,10 @@ All robots in Robocode are comprised of three semi-physical elements: a
  The three elements are mounted upon each other in the order mentioned.
  Observing Robocode physics and intuition, the radar, turret, and body are
  all able to receive distinct instructions, however, because of their location,
- the observed movement demonstrates their dependence (e.g., if the turret,
- which is mounted on the body, is rotated at a certain rate, the rate of
- rotation, relative to the battlefield is its rotation rate added to the
- rotation rate of the body).
+ relative to each other, the observed movement demonstrates their dependence
+ (e.g., if the turret, which is mounted on the body, is rotated at a certain
+ rate, the rate of rotation, relative to the battlefield is its rotation
+ rate added to the rotation rate of the body).
  Regarding translational movement, robots in the Robocode environment accelerate
  and decelerate, as opposed to instantaneously achieving a maximum velocity,
  when moving from one point to another.
@@ -249,22 +249,22 @@ Initial Objectives
 \end_layout
 
 \begin_layout Standard
-All objective, deliverables, and research questions have not changed because
- of their likely feasibility with the allotted time.
- We are proposing an experimental project based on the Robocode artificial
- intelligence architecture.
- The main objective of the project is to demonstrate the ability and the
- power of intelligent teamwork to overcome numerical disadvantage.
- This will be demonstrated by designing a small team of bots that are able
- to effectively use teamwork to overcome the superior numbers of an enemy
- team.
- The main deliverable of the project is the final written report.
- The report will detail our findings and analysis of the capabilities of
- our robots.
-\end_layout
-
-\begin_layout Section
-Accomplished Objectives
+All objective, deliverables, and research questions persisted throughout
+ the span of the project, proving feasibility in the goals, resourcefulness
+ on our part, and a demonstration of time well managed.
+ During the begining of the semester we proposed, in general, an experimental
+ project based on the Robocode artificial intelligence architecture.
+ More specifically, the main objectives of the project were to demonstrate
+ the ability and the power of intelligent agents and cooperative, intelligent
+ teamwork to overcome demanding situations, such as numerical disadvantages.
+ This task has been demonstrated by designing a small team of bots that
+ are able to effectively use teamwork to overcome the superior numbers of
+ an enemy team, whose members appear to be equally as equipped.
+ The main deliverable of the project is this report, which is a brief record
+ of our findings and the capabilities we managed to instill into the robots.
+ Our main method of demonstration, as alluded to earlier, will be to face
+ our team against seemingly supperior opponents and still have our team
+ accomplish its goal (i.e., to defeat the enemy robots consistently).
 \end_layout
 
 \begin_layout Section
@@ -284,26 +284,30 @@ key "EvolutionEmergentBehaviors"
 ) that describe the current state of the field.
  We also read through the informative articles on the Robocode wiki that
  detail common strategies and techniques.
- We will also begin implementing the basic strategies that our bots will
- use, such as wave surfing, statistical targeting, and circular targeting.
+ Following our achievement of a basic understanding of the game, we began
+ implementing the basic strategies that our bots would use, such as wave
+ surfing, statistical targeting, and circular targeting.
 \end_layout
 
 \begin_layout Standard
 Initially, we will started with a simple bot as a proof-of-concept.
  Next we graduated to building a 1-vs-1 bot to help perfect many of the
  individual techniques.
- This stage is still in progress and is seen as an invaluable stage for
- development.
- After the 1-vs-1 bot, we will move on to so-called melee bots that are
- involved in at least 3-way (often 10-way) free-for-all's.
- The final stage in the project will be to build a multi-agent system that
- works together to eliminate enemy bots (individual or teams).
+ This stage is still in progress beacuse it can always be improved on and
+ is seen as an invaluable stage for development, however, upon a satisfactory
+ dualing bot, we expanded our domain.
+ After the 1-vs-1 bot, we moved on to implemnting so-called melee bot strategies
+ (i.e., bot strategies that take into account a battle involving in at least
+ 3-way (often 10-way) free-for-all's).
+ The final stages in the project were to combine and build a multi-agent
+ system that would work together to eliminate enemy bots (individual champion
+ or large teams).
 \end_layout
 
 \begin_layout Standard
-After the experimental phase of the project is complete, we will begin to
- write up our findings for our final report.
- We will analyze the results of the experimental phase and numerically analyze
+After the experimental phase of the project was complete, we began to write
+ up our findings for this final report.
+ We analyzed the results of the experimental phase and numerically analyze
  the results of the battles and compare the data to the theory on which
  it is based.
 \end_layout
@@ -339,24 +343,24 @@ Linear Targeting
 \end_layout
 
 \begin_layout Standard
-Linear targeting is based off the expectation that the enemy bot holds its
- current heading and speed.
+Linear targeting is based off the expectation that the enemy bot will hold
+ its current heading and speed.
  When considering linear targeting, an approximation can be used to reduce
  the amount of code space allocated to its implementation.
- This method of implementation is summarized first.
- Staying true to the belief that the bot will maintain both heading and
- velocity, the lateral velocity of the tracked bot is calculated.
+ This method of implementation, as opposed to the exact method, is summarized.
+ Staying true to the belief that the enemy bot will maintain both heading
+ and velocity, the lateral velocity of the tracked bot is calculated.
  This is the velocity parallel to the tracking bot.
  A firing angle offset is then calculated to compensate for this lateral
  velocity.
  This is the angle at which the tracking bot must fire to successfully hit
  the targeted bot if its current course is maintained.
  The calculation performed to obtain this angle is first to find the offset
- angle (
+ angle, 
 \begin_inset Formula $\theta$
 \end_inset
 
-).
+.
 \begin_inset Formula \[
 \theta=\frac{\sin^{-1}(v_{l}*t)}{v_{b}*t}\]
 
@@ -367,10 +371,6 @@ Linear targeting is based off the expectation that the enemy bot holds its
 
 \begin_layout Standard
 Where 
-\begin_inset Formula $\theta$
-\end_inset
-
- is the offset angle, 
 \begin_inset Formula $v_{l}$
 \end_inset
 
@@ -382,25 +382,20 @@ Where
 \begin_inset Formula $v_{b}$
 \end_inset
 
- is the bullet velocity (which then depends firepower).
- When using applying the sine function to both sides and using small-angle
- approximations, the first angle is approximately equivalent to the quotient
- of the lateral velocity and the bullet velocity.
- This final firing angle is then calculated by taking into account the absolute
- bearing and the gun heading by adding and then subtracting, respectively.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Explain exact method.
-\end_layout
-
+ is the bullet velocity (which depends on the applied firepower).
+ When applying the sine function to both sides of the equation and using
+ small-angle approximations, the first angle is approximately equivalent
+ to the quotient of the lateral velocity, 
+\begin_inset Formula $v_{l}$
 \end_inset
 
+ and the bullet velocity, 
+\begin_inset Formula $v_{b}$
+\end_inset
 
+.
+ This final firing angle is then calculated by taking into account the absolute
+ bearing and the gun heading by adding and then subtracting, respectively.
 \end_layout
 
 \begin_layout Subsubsection
@@ -428,13 +423,9 @@ Like linear targeting, the time at which the fired bullet will hit the targeted
  First, the time it would take for a bullet to arrive at the target's current
  position is calculated.
  However, to improve the approximation, an iterative method is adopted.
- Presenting equations provided by a circular targeting tutorial, it can
- be seen that a prediction of the tracked bot's position at an arbitrary
- time can be obtained.
-\end_layout
-
-\begin_layout Standard
-http://robowiki.net/wiki/Circular_Targeting/Walkthrough
+ A prediction of the tracked bot's position at an arbitrary time can be
+ obtained by using various summations and trig functions that would occupy
+ a large part of this paper if presented.
 \end_layout
 
 \begin_layout Subsection
@@ -452,7 +443,26 @@ A strategy typically implemented during 1 vs.
  arena, energy levels must be monitored to predict bullet locations.
  When tracking an enemy bot, drops in energy levels provide an accurate
  way of tracking an enemy's wave.
- This tracked wave 
+ This tracked wave is a traveling arc which represents the possible locations
+ of the enemy's bullets.
+ Using data collected from various bullet events such as 
+\begin_inset Quotes eld
+\end_inset
+
+onHitByBullet
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+onBulletHitBullet
+\begin_inset Quotes erd
+\end_inset
+
+ and properly managing the tracked waves, a safest spot on the wave is picked
+ in a way similar to the Guessing Factor strategy.
 \end_layout
 
 \begin_layout Subsubsection
@@ -467,7 +477,9 @@ A melee inspired strategy employed by our bots is called a minimum risk
  points.
  The resulting action is to move to the lowest-risk location.
  Issues that are taken into account when the risk factor is calculated are
- 
+ where the bot is relative to other enemy bots, what angle the bot makes
+ with other bots, and where the bot has been and where the bot is on the
+ map.
 \end_layout
 
 \begin_layout Subsection
@@ -488,15 +500,17 @@ A narrow lock radar is a form of a perfect radar.
  is 8 pixels.
  A bots body is 36 pixels wide, or 18 pixels wide in either direction from
  the bot's center.
- 
+ Therefore, any direction the robot travels in a single turn will still
+ result in the robot's body being in line with the tracking radar.
 \end_layout
 
 \begin_layout Standard
 Based on the rules of Robocode, a minor issue arises if the enemy bot remains
  still for two or more turns.
- The effects of this rule becomes apparent after these two turns that the
- enemy bot remains still because the scanning robot will stop scanning automatic
-ally if its radar is not spinning.
+ The effects of this rule becomes apparent after these two turns when the
+ enemy bot is remaining still.
+ This is because the scanning robot will stop scanning automatically if
+ its radar is not spinning.
  To avoid losing the established lock, a call to the bot's scan function
  must be executed manually.
  Another way to overcome the issue is to keep the radar moving and to secure
@@ -515,8 +529,8 @@ An elementary type of melee radar that has been established is called the
  bots are passed, again.
  This process is continuously repeated.
  Because a radar spin can cover an entire circle in eight ticks, the radar
- will continuously spin, instead of reversing direction, if the first spin
- takes more than four ticks to completely cover all bots.
+ will continuously spin, instead of reversing its direction, if the first
+ spin takes more than four ticks to completely cover all bots.
  
 \end_layout
 
@@ -528,10 +542,10 @@ Spinning
 Although looked at as being completely naive and elementary, a simple continuous
 ly spinning radar, is used to accomplish the obvious, that is, to scan in
  a full circle around the tracking bot.
- Although relatively ineffective, the small amount of development time to
- and imagination required to implement this strategy is often used as a
- first choice strategy to gain a feel for the game or when code size is
- extremely limited.
+ Although relatively ineffective, the small amount of development time and
+ imagination required to implement this strategy is often used as a first
+ choice strategy to gain a feel for the game or when code size is extremely
+ limited.
 \end_layout
 
 \begin_layout Subsection
@@ -546,7 +560,7 @@ name "sub:State-Management"
 \end_layout
 
 \begin_layout Standard
-IBM was gracious enough to open-source some of their code
+IBM was gracious enough to open-source fragments of their code
 \begin_inset Foot
 status collapsed
 
@@ -574,7 +588,7 @@ key "SecretsRobocodeMasters"
 \end_inset
 
 .
- The central point of this code is a state manager.
+ The central point of this code is the concept of a state manager.
  The state manager chooses the next state of the bot by looking at all of
  the loaded states and asking each of them if they are currently valid,
  next it compares the performance characteristics of previous states, and
@@ -584,12 +598,12 @@ key "SecretsRobocodeMasters"
 \begin_layout Standard
 Each robot can have several different states running at each time.
  We decided to have three states: movement, gun, and radar.
- This helps to keep the code nice and clean, each new technique we add we
- just need to make it into a new state.
- However, that is not to say that the integration required is minimal, the
- code often requires much modification.
- Some of their underlying assumptions are often wrong such as the battlefield
- always being 
+ This helps keep the code orderly and practical.
+ Each new technique we added was easily accomodated by making a new state.
+ However, that is not to say that the integration required was minimal.
+ The code often required much modification.
+ Some of the underlying assumptions that authors made were often wrong such
+ as the battlefield is always 
 \begin_inset Formula $800\times600$
 \end_inset
 
@@ -598,21 +612,22 @@ Each robot can have several different states running at each time.
 
 \begin_layout Standard
 We typically had two different sets of states.
- Those used for melee, that is greater than one enemy, and those for 1-vs-1,
- that is exactly one enemy.
- The states within those sets of states are then choosen based on the statistics.
+ Those used for melee, that is, greater than one enemy, and those for 1-vs-1,
+ that is, exactly one enemy.
+ The states within those sets of states are then chosen based on the gathered
+ statistics.
 \end_layout
 
 \begin_layout Standard
 This code was integrated by including it within our project and setting
- the ExtendedBot class to inherit from our own ExtendedBotUH, which then
- inherits from the actual Robocode class TeamRobot when then inherits from
+ the ExtendedBot class to inherit from our own ExtendedBotUH class, which
+ inherits from the actual Robocode class, TeamRobot which inherits from
  AdvancedBot
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Since this is confusing in text form, look at 
+Since this is confusing in text form, note 
 \begin_inset CommandInset ref
 LatexCommand prettyref
 reference "fig:Class-Diagram"
@@ -625,23 +640,35 @@ reference "fig:Class-Diagram"
 \end_inset
 
 .
- We then based much of our development on developing and perfecting various
- states for the robot.
- This made it much easier to create complex states that need input from
+ We then allocated much of our time on developing and perfecting various
+ states for the robots.
+ This made it much easier when creating complex states that need input from
  many different events such as wave surfing.
 \end_layout
 
 \begin_layout Standard
 The State Manager also includes publisher/subscriber support so that states
  only get the specific events that they subscribe to.
- This is to help performance of the resulting system.
- Unfortunately for us, the State Manger did not include support for the
- onPaint event that is needed for painting debug information on the screen.
+ This is to help the performance of the resulting system.
+ Unfortunately, the State Manger did not include support for the onPaint
+ event that is needed for painting debug information on the screen.
  So the State Manger and ExtendedBot were modified to include this support.
 \end_layout
 
 \begin_layout Subsection
 Team Management
+\end_layout
+
+\begin_layout Standard
+Because much of our research pointed toward champion teams that paired melee
+ bots as teammates, we decided to limit the amount of team communication
+ overhead to a minimum, but still focus on the team goals we set.
+ The observable actions of our team bots include our bots not banging into
+ each other, our bots sharing enemy bot information, and our bots not firing
+ when a team mate is inline with an enemy.
+ When playing against other team robots (who were downloadable champion
+ bots) we realized that friendly fire was a huge issue, that many times
+ awarded our team a victory, even amongst champion teams.
 \end_layout
 
 \begin_layout Subsubsection
@@ -650,13 +677,14 @@ Problems encountered
 
 \begin_layout Standard
 In the course of our development of our team management we made a startling
- discovery, the TeamRobot.isTeamate() function did not work! We passed it
- the name of a teammate and it returned false.
+ discovery.
+ The TeamRobot.isTeamate() function, which was provided by Robocode, did
+ not work! When passed the name of a teammate, the function returned false!
  This was eventually traced down to a difference in representation for developme
 nt versus packaged bots.
  Development bots have an asterisk in their name.
- However, when you check the names of your teammates through the TeamRobot.getTea
-mmates() function it does not include the asterisk.
+ However, when checking the names of your teammates through the TeamRobot.getTeam
+mates() function, an asterisk renders it useless.
  We hacked around this as shown in 
 \begin_inset CommandInset ref
 LatexCommand prettyref
@@ -740,35 +768,21 @@ Development
 \end_layout
 
 \begin_layout Subsection
-Background Research
-\end_layout
-
-\begin_layout Standard
-We have done a substantial amount of basic research as mentioned in the
- previous sections.
- Our research focused on journal articles as well as the excellent source
- of practical and necessary information that is provided on the Robocode
- wiki.
-\end_layout
-
-\begin_layout Subsection
 Phase 1: Individual Bots
 \end_layout
 
 \begin_layout Standard
-As mentioned above, one of our main sections of progress was the basic research
+As mentioned above, one of our main focus for progress was the basic research
  done to understand Robocode.
  We initially underestimated the amount of time for the background research
- and it has pushed our resulting schedule back.
+ and as a result it pushed our project schedule back.
 \end_layout
 
 \begin_layout Standard
-We have done significant work on the 1-vs-1 bot implementation.
- We have implemented a narrow radar lock which points the radar at the enemy's
- last known location.
- The narrow radar lock is an example of a perfect radar lock, which means
- that the robot will never lose the lock assuming that the robot never skips
- a turn.
+On the 1-vs-1 bot implementation, a significant amount of work and development
+ was accomplished.
+ All aforementioned 1-vs-1 movement, tracking, and shooting strategies that
+ were implemented demonstrate this.
 \end_layout
 
 \begin_layout Standard
@@ -940,11 +954,11 @@ The BotCollection class was also fundamental to the project.
 \end_layout
 
 \begin_layout Section
-Expected Development
+Acomplished Objectives
 \end_layout
 
 \begin_layout Subsection
-Phase 1: Individual Bots
+Challenge: Individual Bots
 \end_layout
 
 \begin_layout Standard
@@ -974,7 +988,7 @@ For movement strategies we are considering some form of wave surfing.
 \end_layout
 
 \begin_layout Subsection
-Phase 2: Team Bots
+Challenge: Team Bots
 \end_layout
 
 \begin_layout Standard
